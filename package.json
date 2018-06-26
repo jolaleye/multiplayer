@@ -1,0 +1,29 @@
+{
+  "name": "multiplayer",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "node server/index.js",
+    "start:client": "react-scripts start",
+    "start:server": "nodemon server/index.js",
+    "start:dev": "concurrently -k -n \"client,server\" -c \"cyan,magenta\" \"npm run start:client\" \"npm run start:server\"",
+    "build": "react-scripts build"
+  },
+  "dependencies": {
+    "express": "^4.16.3",
+    "lodash": "^4.17.10",
+    "pixi.js": "^4.8.1",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "react-scripts": "1.1.4",
+    "schemapack": "^1.4.2",
+    "uws": "^10.148.1"
+  },
+  "devDependencies": {
+    "concurrently": "^3.6.0",
+    "eslint": "^5.0.1",
+    "eslint-config-airbnb-base": "^13.0.0",
+    "eslint-plugin-import": "^2.13.0",
+    "nodemon": "^1.17.5"
+  }
+}
