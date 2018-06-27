@@ -1,0 +1,11 @@
+.game {
+  grid-area: game;
+  position: absolute;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.game canvas {
+  display: block;
+}

@@ -1,0 +1,13 @@
+.controls {
+  grid-area: controls;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  background: #000;
+  border-right: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 3em 2.5em;
+}
+
+.controls .header {
+  font-size: 2em;
+}
