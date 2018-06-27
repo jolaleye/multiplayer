@@ -15,7 +15,7 @@ class GameContainer extends Component {
 
   render = () => (
     this.state.app
-      ? <Game app={this.state.app} />
+      ? <Game app={this.state.app} assets={this.props.assets} />
       : <div>Loading</div>
   );
 }
