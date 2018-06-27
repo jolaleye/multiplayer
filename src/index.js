@@ -23,7 +23,7 @@ class App extends Component {
   render = () => (
     <Fragment>
       <Controls />
-      <Game />
+      {this.state.socket ? <Game /> : <div>Loading</div>}
     </Fragment>
   );
 }
