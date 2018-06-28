@@ -1,6 +1,6 @@
 import { Sprite } from 'pixi.js';
 
-import { lerp, angleLerp } from '../../services/util';
+import { lerp, angleLerp, getDistance } from '../../services/util';
 
 class PlayerManager {
   constructor(id, playerTexture, ghostTexture) {
@@ -40,6 +40,17 @@ class PlayerManager {
     } else {
       this.local = this.next;
     }
+  }
+
+  predict = target => {
+    const distance = getDistance(this.local.pos.x, target.x, this.local.pos.y, target.y);
+    this.local.direction = Math.atan2(distance.y, distance.x);
+
+    const dx = 5 * Math.cos(this.local.direction);
+    const dy = 5 * Math.sin(this.local.direction);
+
+    this.local.pos.x += dx;
+    this.local.pos.y += dy;
   }
 
   update = () => {
