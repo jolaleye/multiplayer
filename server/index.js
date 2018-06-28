@@ -42,10 +42,19 @@ ws.on('connection', client => {
 
 // apply client requests
 const simulate = () => {
-  commandQueue.forEach(command => {
-    ws.clients.forEach(client => {
-      if (client.id === command.id) client.player.move(command.target);
+  ws.clients.forEach(client => {
+    if (!client.player) return;
+
+    // find all the commands by this client
+    const commands = commandQueue.filter(({ id }) => id === client.id);
+
+    // apply commands
+    commands.forEach(command => {
+      client.player.move(command.target);
     });
+
+    // remove all of this client's commands from the queue
+    _.remove(commandQueue, ({ id }) => id === client.id);
   });
 };
 
