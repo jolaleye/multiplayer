@@ -71,19 +71,22 @@ class Game extends Component {
 
   inputTicker = () => {
     const { socket, settings } = this.props;
+    this.tick += 1;
 
     const target = this.app.renderer.plugins.interaction.mouse.global;
-    socket.send(JSON.stringify({ _: 'command', target }));
-    this.tick += 1;
+    socket.send(JSON.stringify({ _: 'command', target, tick: this.tick }));
 
     // client prediction
     if (settings.prediction) {
       const manager = this.playerManagers.find(({ id }) => id === socket.id);
+      if (settings.reconciliation) manager.history.push({ target, tick: this.tick });
       manager.predict(target);
     }
   }
 
   sync = snapshot => {
+    const { socket, settings } = this.props;
+
     // remove managers for players who are no longer present
     this.playerManagers.forEach(manager => {
       if (snapshot.players.some(({ id }) => id === manager.id)) return;
@@ -98,7 +101,7 @@ class Game extends Component {
 
       // create a manager if this player doesn't have one
       if (!manager) {
-        const { socket, assets } = this.props;
+        const { assets } = this.props;
 
         const playerTexture = player.id === socket.id
           ? assets['active-player.png'] : assets['other-player.png'];
@@ -111,6 +114,12 @@ class Game extends Component {
       }
 
       manager.sync(player, snapshot.timestamp, this.props.settings.ghost);
+
+      // if this manager belongs to the active player and prediction & reconciliation are on...
+      // then reconcile with the server's state
+      if (manager.id === socket.id && settings.prediction && settings.reconciliation) {
+        manager.reconcile(player, snapshot.lastAcknowledged);
+      }
     });
 
     this.elapsedSinceSnapshot = 0;

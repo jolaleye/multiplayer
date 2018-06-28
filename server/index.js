@@ -29,7 +29,9 @@ ws.on('connection', client => {
 
   client.on('message', packet => {
     const data = JSON.parse(packet);
-    if (data._ === 'command') commandQueue.push({ id: client.id, target: data.target });
+    if (data._ === 'command') {
+      commandQueue.push({ id: client.id, target: data.target, tick: data.tick });
+    }
   });
 
   // remove players when they disconnect
@@ -45,6 +47,10 @@ const simulate = () => {
 
     // find all the commands by this client
     const commands = commandQueue.filter(({ id }) => id === client.id);
+    if (commands.length === 0) return;
+
+    // identify the last command by each client
+    client.lastAcknowledged = _.last(commands).tick;
 
     // apply commands
     commands.forEach(command => {
@@ -59,7 +65,12 @@ const simulate = () => {
 // take a snapshot of the game state & send to clients
 const snapshot = () => {
   ws.clients.forEach(client => {
-    client.send(JSON.stringify({ _: 'snapshot', timestamp: Date.now(), players }));
+    client.send(JSON.stringify({
+      _: 'snapshot',
+      timestamp: Date.now(),
+      lastAcknowledged: client.lastAcknowledged,
+      players,
+    }));
   });
 };
 

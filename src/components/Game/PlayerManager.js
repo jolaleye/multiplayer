@@ -1,10 +1,12 @@
 import { Sprite } from 'pixi.js';
+import _ from 'lodash';
 
 import { lerp, angleLerp, getDistance } from '../../services/util';
 
 class PlayerManager {
   constructor(id, playerTexture, ghostTexture) {
     this.id = id;
+    this.history = [];
 
     this.player = new Sprite(playerTexture);
     this.player.anchor.set(0.5, 0.5);
@@ -51,6 +53,33 @@ class PlayerManager {
 
     this.local.pos.x += dx;
     this.local.pos.y += dy;
+  }
+
+  reconcile = (player, lastAcknowledged) => {
+    // discard history up to the last acknowledged command
+    this.history = _.dropWhile(this.history, ({ tick }) => tick <= lastAcknowledged);
+
+    // apply unacknowledged commands to the server's state
+    const serverState = player;
+    this.history.forEach(({ target }) => {
+      const distance = getDistance(serverState.pos.x, target.x, serverState.pos.y, target.y);
+      const direction = Math.atan2(distance.y, distance.x);
+
+      const dx = 5 * Math.cos(direction);
+      const dy = 5 * Math.sin(direction);
+
+      serverState.pos.x += dx;
+      serverState.pos.y += dy;
+      serverState.direction = direction;
+    });
+
+    // the difference between the local state and the server state + unacknowledged input
+    const disparity = {
+      pos: getDistance(this.local.pos.x, serverState.pos.x, this.local.pos.y, serverState.pos.y),
+      direction: this.local.direction - serverState.direction,
+    };
+
+    this.local = serverState;
   }
 
   update = () => {
