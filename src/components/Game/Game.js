@@ -26,8 +26,7 @@ class Game extends Component {
     window.addEventListener('resize', this.resize);
     this.resize();
 
-    this.inputTick = window.setInterval(this.sampleInput, 15);
-    this.sendTick = window.setInterval(this.sendInput, 33);
+    this.inputTick = window.setInterval(this.inputTicker, 15);
     ticker.add(this.update);
 
     const { socket } = this.props;
@@ -52,32 +51,36 @@ class Game extends Component {
 
 
   update = () => {
+    const { socket, settings } = this.props;
+
     this.elapsedSinceSnapshot += this.app.ticker.elapsedMS;
     this.playerManagers.forEach(manager => {
       if (!(manager.origin && manager.next)) return;
 
-      // interpolate players between the last two snapshots
-      const smoothPeriod = manager.next.timestamp - manager.origin.timestamp;
-      const delta = this.elapsedSinceSnapshot / smoothPeriod;
-      manager.interpolate(_.clamp(delta, 0, 1), this.props.settings.interpolation);
+      // interpolate other players between the last two snapshots
+      // only interpolate the current player if prediction is off
+      if ((manager.id !== socket.id) || !settings.prediction) {
+        const smoothPeriod = manager.next.timestamp - manager.origin.timestamp;
+        const delta = this.elapsedSinceSnapshot / smoothPeriod;
+        manager.interpolate(_.clamp(delta, 0, 1), settings.interpolation);
+      }
 
       manager.update();
     });
   }
 
-  sampleInput = () => {
-    const { renderer } = this.app;
-    const target = renderer.plugins.interaction.mouse.global;
+  inputTicker = () => {
+    const { socket, settings } = this.props;
 
-    this.targetQueue.push(target);
-
+    const target = this.app.renderer.plugins.interaction.mouse.global;
+    socket.send(JSON.stringify({ _: 'command', target }));
     this.tick += 1;
-  }
 
-  sendInput = () => {
-    const { socket } = this.props;
-    socket.send(JSON.stringify({ _: 'commands', targets: this.targetQueue }));
-    this.targetQueue = [];
+    // client prediction
+    if (settings.prediction) {
+      const manager = this.playerManagers.find(({ id }) => id === socket.id);
+      manager.predict(target);
+    }
   }
 
   sync = snapshot => {
