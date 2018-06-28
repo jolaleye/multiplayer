@@ -13,6 +13,7 @@ class App extends Component {
     assets: null,
     ghost: true,
     interpolation: false,
+    prediction: false,
   }
 
   async componentDidMount() {
@@ -41,14 +42,14 @@ class App extends Component {
   }
 
   render = () => {
-    const { socket, assets, ghost, interpolation } = this.state;
+    const { socket, assets, ghost, interpolation, prediction } = this.state;
 
-    const settings = { ghost, interpolation };
+    const settings = { ghost, interpolation, prediction };
 
     return (
       <Fragment>
         <Controls handleChange={this.handleControlChange}
-          ghost={ghost} interpolation={interpolation}
+          ghost={ghost} interpolation={interpolation} prediction={prediction}
         />
         {
           socket && assets

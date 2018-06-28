@@ -2,7 +2,7 @@ import React from 'react';
 
 import './Controls.css';
 
-const Controls = ({ handleChange, ghost, interpolation }) => (
+const Controls = ({ handleChange, ghost, interpolation, prediction }) => (
   <div className="controls">
     <span className="header">Controls</span>
     <label className="checkbox">
@@ -12,6 +12,10 @@ const Controls = ({ handleChange, ghost, interpolation }) => (
     <label className="checkbox">
       <input type="checkbox" name="interpolation" checked={interpolation}
         onChange={handleChange} /> Interpolation
+    </label>
+    <label className="checkbox">
+    <input type="checkbox" name="prediction" checked={prediction}
+        onChange={handleChange} /> Prediction
     </label>
   </div>
 );
