@@ -29,9 +29,7 @@ ws.on('connection', client => {
 
   client.on('message', packet => {
     const data = JSON.parse(packet);
-    if (data._ === 'commands') {
-      data.targets.forEach(target => commandQueue.push({ id: client.id, target }));
-    }
+    if (data._ === 'command') commandQueue.push({ id: client.id, target: data.target });
   });
 
   // remove players when they disconnect
