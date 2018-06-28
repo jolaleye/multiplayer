@@ -4,7 +4,7 @@ import 'bulma/css/bulma.css';
 
 import './main.css';
 import Controls from './components/Controls/ControlsContainer';
-import Game from './components/Game/GameContainer';
+import Game from './components/Game/Game';
 import AssetManager from './AssetManager';
 
 class App extends Component {
@@ -18,7 +18,12 @@ class App extends Component {
       ? `wss://${window.location.host}` : 'ws://localhost:3001';
     const socket = new WebSocket(url);
     socket.binaryType = 'arraybuffer';
-    this.setState({ socket });
+    socket.onopen = () => this.setState({ socket });
+
+    socket.addEventListener('message', packet => {
+      const data = JSON.parse(packet.data);
+      if (data._ === 'clientID') socket.id = data.id;
+    });
 
     // load assets
     const assets = await AssetManager.load();
@@ -33,7 +38,8 @@ class App extends Component {
         <Controls />
         {
           socket && assets
-            ? <Game assets={assets} /> : <div>Loading</div>
+            ? <Game socket={socket} assets={assets} />
+            : <div>Loading...</div>
         }
       </Fragment>
     );
