@@ -27,6 +27,7 @@ class Game extends Component {
     this.resize();
 
     this.inputTick = window.setInterval(this.inputTicker, 15);
+    window.setInterval(this.updateDisparity, 1000);
     ticker.add(this.update);
 
     const { socket } = this.props;
@@ -67,6 +68,14 @@ class Game extends Component {
 
       manager.update();
     });
+  }
+
+  updateDisparity = () => {
+    const { socket, settings, updateDisparity } = this.props;
+
+    if (settings.prediction && settings.reconciliation) {
+      updateDisparity(this.playerManagers.find(({ id }) => id === socket.id).disparity);
+    } else updateDisparity(false);
   }
 
   inputTicker = () => {

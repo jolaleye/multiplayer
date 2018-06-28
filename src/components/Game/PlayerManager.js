@@ -74,7 +74,7 @@ class PlayerManager {
     });
 
     // the difference between the local state and the server state + unacknowledged input
-    const disparity = {
+    this.disparity = {
       pos: getDistance(this.local.pos.x, serverState.pos.x, this.local.pos.y, serverState.pos.y),
       direction: this.local.direction - serverState.direction,
     };

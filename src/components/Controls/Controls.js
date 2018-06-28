@@ -2,7 +2,9 @@ import React from 'react';
 
 import './Controls.css';
 
-const Controls = ({ handleChange, ghost, interpolation, prediction, reconciliation }) => (
+const Controls = ({
+  handleChange, ghost, interpolation, prediction, reconciliation, disparity,
+}) => (
   <div className="controls">
     <span className="header">Controls</span>
     <label className="checkbox">
@@ -21,7 +23,17 @@ const Controls = ({ handleChange, ghost, interpolation, prediction, reconciliati
       <input type="checkbox" name="reconciliation" checked={reconciliation}
           onChange={handleChange} /> Reconciliation
     </label>
+    {prediction && reconciliation && disparity &&
+      <div className="disparity">
+        <span className="header">Disparity</span>
+        <p>X: {disparity.pos.x}</p>
+        <p>Y: {disparity.pos.y}</p>
+        <p>Direction: {disparity.direction}</p>
+      </div>
+    }
   </div>
 );
 
 export default Controls;
+
+/* eslint operator-linebreak: off */

@@ -21,3 +21,22 @@
 .controls .checkbox:hover {
   color: white;
 }
+
+.controls .disparity {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  width: 90%;
+}
+
+.controls .disparity .header {
+  font-size: 1em;
+}
+
+.controls .disparity p {
+  text-align: center;
+  width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}

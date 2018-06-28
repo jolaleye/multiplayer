@@ -15,6 +15,7 @@ class App extends Component {
     interpolation: false,
     prediction: false,
     reconciliation: false,
+    disparity: false,
   }
 
   async componentDidMount() {
@@ -42,8 +43,15 @@ class App extends Component {
     this.setState({ [name]: value });
   }
 
+  updateDisparity = disparity => {
+    // the difference between client and server player state
+    this.setState({ disparity });
+  }
+
   render = () => {
-    const { socket, assets, ghost, interpolation, prediction, reconciliation } = this.state;
+    const {
+      socket, assets, ghost, interpolation, prediction, reconciliation, disparity,
+    } = this.state;
 
     const settings = { ghost, interpolation, prediction, reconciliation };
 
@@ -51,11 +59,13 @@ class App extends Component {
       <Fragment>
         <Controls handleChange={this.handleControlChange}
           ghost={ghost} interpolation={interpolation} prediction={prediction}
-          reconciliation={reconciliation}
+          reconciliation={reconciliation} disparity={disparity}
         />
         {
           socket && assets
-            ? <Game socket={socket} assets={assets} settings={settings} />
+            ? <Game socket={socket} assets={assets} settings={settings}
+                updateDisparity={this.updateDisparity}
+              />
             : <div>Loading...</div>
         }
       </Fragment>
