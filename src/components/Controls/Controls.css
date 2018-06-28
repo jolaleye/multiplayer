@@ -10,4 +10,14 @@
 
 .controls .header {
   font-size: 2em;
+  margin-bottom: 0.5em;
+}
+
+.controls .checkbox {
+  font-size: 1.3em;
+  margin-bottom: 0.5em;
+}
+
+.controls .checkbox:hover {
+  color: white;
 }

@@ -59,7 +59,7 @@ class Game extends Component {
       // interpolate players between the last two snapshots
       const smoothPeriod = manager.next.timestamp - manager.origin.timestamp;
       const delta = this.elapsedSinceSnapshot / smoothPeriod;
-      manager.interpolate(_.clamp(delta, 0, 1));
+      manager.interpolate(_.clamp(delta, 0, 1), this.props.settings.interpolation);
 
       manager.update();
     });
@@ -107,7 +107,7 @@ class Game extends Component {
         this.app.stage.addChild(manager.player, manager.ghost);
       }
 
-      manager.sync(player, snapshot.timestamp);
+      manager.sync(player, snapshot.timestamp, this.props.settings.ghost);
     });
 
     this.elapsedSinceSnapshot = 0;

@@ -3,13 +3,16 @@ import ReactDOM from 'react-dom';
 import 'bulma/css/bulma.css';
 
 import './main.css';
-import Controls from './components/Controls/ControlsContainer';
+import Controls from './components/Controls/Controls';
 import Game from './components/Game/Game';
 import AssetManager from './AssetManager';
 
 class App extends Component {
   state = {
     socket: null,
+    assets: null,
+    ghost: true,
+    interpolation: false,
   }
 
   async componentDidMount() {
@@ -30,15 +33,26 @@ class App extends Component {
     this.setState({ assets });
   }
 
+  handleControlChange = event => {
+    const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
+    const { name } = event.target;
+
+    this.setState({ [name]: value });
+  }
+
   render = () => {
-    const { socket, assets } = this.state;
+    const { socket, assets, ghost, interpolation } = this.state;
+
+    const settings = { ghost, interpolation };
 
     return (
       <Fragment>
-        <Controls />
+        <Controls handleChange={this.handleControlChange}
+          ghost={ghost} interpolation={interpolation}
+        />
         {
           socket && assets
-            ? <Game socket={socket} assets={assets} />
+            ? <Game socket={socket} assets={assets} settings={settings} />
             : <div>Loading...</div>
         }
       </Fragment>
