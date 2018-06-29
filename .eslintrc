@@ -3,7 +3,10 @@
   "rules": {
     "linebreak-style": ["error", "windows"],
     "no-console": "off",
-    "arrow-parens": "off"
+    "arrow-parens": "off",
+    "object-curly-newline": "off",
+    "no-param-reassign": "off",
+    "lines-between-class-members": "off"
   },
   "env": {
     "browser": true
