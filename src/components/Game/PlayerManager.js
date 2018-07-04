@@ -79,7 +79,7 @@ class PlayerManager {
       direction: this.local.direction - serverState.direction,
     };
 
-    this.local = serverState;
+    if (this.disparity.pos > 3) this.local = serverState;
   }
 
   update = () => {
