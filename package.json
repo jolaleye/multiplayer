@@ -1,7 +1,8 @@
 {
-  "name": "multiplayer",
-  "version": "0.1.0",
   "private": true,
+  "name": "multiplayer",
+  "author": "Jonathan Olaleye",
+  "license": "MIT",
   "scripts": {
     "start": "node server/index.js",
     "start:client": "react-scripts start",
