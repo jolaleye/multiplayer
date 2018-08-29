@@ -11,15 +11,15 @@
     "build": "react-scripts build"
   },
   "dependencies": {
-    "bulma": "^0.7.1",
-    "express": "^4.16.3",
-    "lodash": "^4.17.10",
-    "pixi.js": "^4.8.1",
-    "react": "^16.4.2",
-    "react-dom": "^16.4.2",
+    "bulma": "0.7.1",
+    "express": "4.16.3",
+    "lodash": "4.17.10",
+    "pixi.js": "4.8.1",
+    "react": "16.4.2",
+    "react-dom": "16.4.2",
     "react-scripts": "1.1.4",
-    "schemapack": "^1.4.2",
-    "uws": "^10.148.1"
+    "schemapack": "1.4.2",
+    "uws": "10.148.1"
   },
   "devDependencies": {
     "concurrently": "^3.6.1",
